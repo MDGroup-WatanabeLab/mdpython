@@ -21,7 +21,7 @@
 
 
 ## 作成可能な構造（Structure フォルダ）
-wyckoff positionはwyckoffの値，格子定数はDFTによる共役勾配法で決定。　　具体的な対応は下記の表のとおり。
+wyckoff positionはwyckoffの値，格子定数はDFTによる共役勾配法で決定。  具体的な対応は下記の表のとおり。
 |プログラム名|結晶構造名|対応化合物|
 ---|---|---
 aq-SiO2.py|α型クオーツ|α-quartz
@@ -49,7 +49,7 @@ wurtzite.py|ウルツ型構造|$\mathrm {ZnO, ZnS, BeO, BN, GaN}$
 ## MLFF用ツール（Tool4MLFF フォルダ）
 - calc_mlff.py  
   VASPのML_MODE＝TRAINを繰り返す。
-    プログラム上部の __mpi_num__ を変更すれば，並列計算のコア数，を変更可能。下のようなEXAMPLEフォルダを用意する。  
+    プログラム上部の __mpi_num__ を変更すれば，並列計算のコア数を変更可能。下のようなEXAMPLEフォルダを用意する。  
     - EXAMPLE
       - ICONST
       - INCAR
