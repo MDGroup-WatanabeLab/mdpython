@@ -94,7 +94,7 @@ wurtzite.py|ウルツ型構造|$\mathrm {ZnO, ZnS, BeO, BN, GaN}$
     INCARのNSWも調整する必要あり．
 
 - calc_mlff_ctifor.py
-  一つ前の計算から、MLFFの閾値（ML_CTIFOR）を引き継ぐ。　
+  一つ前の計算から、MLFFの閾値（ML_CTIFOR）を引き継ぐ。  
   __calc_mlff.pyよりもこちらを推奨__  
   使い方は通常のcalc_mlff.pyと同様
 
