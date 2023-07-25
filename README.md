@@ -21,7 +21,7 @@
 
 
 ## 作成可能な構造（Structure フォルダ）
-wyckoff positionはwyckoffの値，格子定数はDFTによる共役勾配法で決定。　　具体的な対応は下記の表のとおり。
+wyckoff positionはwyckoffの値，格子定数はDFTによる共役勾配法で決定。具体的な対応は下記の表のとおり。
 |プログラム名|結晶構造名|対応化合物|
 ---|---|---
 aq-SiO2.py|α型クオーツ|α-quartz
@@ -35,7 +35,7 @@ perovskite.py|ペロブスカイト構造|$\mathrm {BaTiO_3, CaTiO_3}$
 rocksalt.py|岩塩型構造|$\mathrm { GST, NaCl, MgO, CaO}$
 sphalerite.py|閃亜鉛鉱型|$\mathrm {ZnS}$
 rutile.py|ルチル型構造|$\mathrm {SiO_2, GeO_2}$
-SiO2_all.py|$\mathrm {SiO_2}$ の構造 | α-$\mathrm {quartz}$, β-$\mathrm {quartz}$, β-$\mathrm {tridymite}$,  α-$\mathrm {cristobalite}$, β-$\mathrm {cristobalite}$, $\mathrm {stishovite}$
+SiO2_all.py|$\mathrm {SiO_2}$ の構造 | α-quartz, β-quartz, β-tridymite,  α-cristobalite, β-cristobalite, stishovite
 trigonal.py|単体の三方晶系|$\mathrm {Sb, Te}$
 wurtzite.py|ウルツ型構造|$\mathrm {ZnO, ZnS, BeO, BN, GaN}$
 
@@ -49,7 +49,7 @@ wurtzite.py|ウルツ型構造|$\mathrm {ZnO, ZnS, BeO, BN, GaN}$
 ## MLFF用ツール（Tool4MLFF フォルダ）
 - calc_mlff.py  
   VASPのML_MODE＝TRAINを繰り返す。
-    プログラム上部の __mpi_num__ を変更すれば，並列計算のコア数，を変更可能。下のようなEXAMPLEフォルダを用意する。  
+    プログラム上部の __mpi_num__ を変更すれば，並列計算のコア数を変更可能。下のようなEXAMPLEフォルダを用意する。  
     - EXAMPLE
       - ICONST
       - INCAR
