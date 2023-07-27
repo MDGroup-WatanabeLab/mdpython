@@ -33,7 +33,7 @@ perovskite.py|ペロブスカイト構造|$\mathrm {BaTiO_3, CaTiO_3}$
 rocksalt.py|岩塩型構造|$\mathrm { GST, NaCl, MgO, CaO}$
 sphalerite.py|閃亜鉛鉱型|$\mathrm {ZnS}$
 rutile.py|ルチル型構造|$\mathrm {SiO_2, GeO_2}$
-SiO2_all.py|$\mathrm {SiO_2}$ の構造 | α-$\mathrm {quartz}$, β-$\mathrm {quartz}$, β-$\mathrm {tridymite}$,  α-$\mathrm {cristobalite}$, β-$\mathrm {cristobalite}$, $\mathrm {stishovite}$
+SiO2_all.py|$\mathrm {SiO_2}$ の構造 | α-quartz, β-quartz, β-tridymite,  α-cristobalite, β-cristobalite, stishovite
 trigonal.py|単体の三方晶系|$\mathrm {Sb, Te}$
 wurtzite.py|ウルツ型構造|$\mathrm {ZnO, ZnS, BeO, BN, GaN}$
 
@@ -53,15 +53,16 @@ wurtzite.py|ウルツ型構造|$\mathrm {ZnO, ZnS, BeO, BN, GaN}$
 
 ## MLFF用ツール（Tool4MLFF フォルダ）
 - calc_mlff.py  
-  VASPのML_MODE＝TRAINを繰り返す。
-    プログラム上部の __mpi_num__ を変更すれば，並列計算のコア数を変更可能。下のようなEXAMPLEフォルダを用意する。  
-    - EXAMPLE
-      - ICONST
-      - INCAR
-      - KPOINTS
-      - POSCAR
-      - POTCAR
-      - ML_ABN
+  VASPの計算を繰り返す。計算内容はINCARに依存する。CONTCARをPOSCARに変換して、構造を継続して使用する。  
+  プログラム上部の __mpi_num__ を変更すれば，並列計算のコア数を変更可能。下のようなEXAMPLEフォルダを用意する。  
+
+      EXAMPLE       
+          └── ICONST
+          └── INCAR
+          └── KPOINTS
+          └── POSCAR
+          └── POTCAR
+          └── ML_ABN
 
     EXAMPLEディレクトリ内のターミナル上で
 
@@ -72,18 +73,20 @@ wurtzite.py|ウルツ型構造|$\mathrm {ZnO, ZnS, BeO, BN, GaN}$
         $ nohup python calc_mlff.py -d npt -n 50 &
 
     で実行すると，次のようにディレクトリが50個生成される．
-    - EXAMPLE
-      - npt_1
-      - npt_2
-      - ：
-      - ：
-      - npt_50
-      - ICONST
-      - INCAR
-      - KPOINTS
-      - POSCAR
-      - POTCAR
-      - ML_ABN
+
+      EXAMPLE       
+          └── npt_1  
+          └── npt_2
+                :
+                :
+          └── npt_50
+          └── ICONST
+          └── INCAR
+          └── KPOINTS
+          └── POSCAR
+          └── POTCAR
+          └── ML_ABN
+
 
 
 - calc_mlff_t.py  
@@ -93,12 +96,12 @@ wurtzite.py|ウルツ型構造|$\mathrm {ZnO, ZnS, BeO, BN, GaN}$
   &emsp;300Kから2000Kへ加熱，2000Kから300Kへの冷却を交互に行う．  
     INCARのNSWも調整する必要あり．
 
-- calc_mlff_ctifor.py
+- calc_mlff_ctifor.py  
   一つ前の計算から、MLFFの閾値（ML_CTIFOR）を引き継ぐ。  
   __calc_mlff.pyよりもこちらを推奨__  
   使い方は通常のcalc_mlff.pyと同様
 
-- calc_mlff_scale.py
+- calc_mlff_scale.py  
   プログラム内の"START", "END", "STEP"に応じ、POSCARのスケーリングを行い自動的に計算を行う。主に、E-V図を作成する際に有用。INCARおすすめ設定は次の通り。
 
       # Basic parameters for DFT 
@@ -142,30 +145,49 @@ wurtzite.py|ウルツ型構造|$\mathrm {ZnO, ZnS, BeO, BN, GaN}$
 
 
 - data_sorting.py  
- calc_mlff.pyが存在するディレクトリと同じ場所に入れる。  
-   ![](2023-07-27-14-43-35.png)
- 
+ calc_mlff.pyが存在するディレクトリと同じ場所に入れる。
+
+      EXAMPLE       
+          └── npt_1  
+          └── npt_2
+                :
+                :
+          └── npt_50
+          └── ICONST
+          └── INCAR
+          └── KPOINTS
+          └── POSCAR
+          └── POTCAR
+          └── ML_ABN
+          └── calc_mlff.py
+          └── data_sorting.py
+          
+
   ターミナル上で，次のコマンドを実行する。  
 
         $ python data_sorting.py
     
 
     すると，次のようにExcelファイルが生成される。
-    - EXAMPLE
-      - npt_1
-      - npt_2
-      - ：
-      - ：
-      - npt_50
-      - ICONST
-      - INCAR
-      - KPOINTS
-      - POSCAR
-      - POTCAR
-      - ML_ABN  
-      - data_sorting.py
-      - data.xlsx
+
+      EXAMPLE       
+          └── npt_1  
+          └── npt_2
+                :
+                :
+          └── npt_50
+          └── ICONST
+          └── INCAR
+          └── KPOINTS
+          └── POSCAR
+          └── POTCAR
+          └── ML_ABN
+          └── calc_mlff.py
+          └── data_sorting.py
+          └── data.xlsx
+    
   
+
 - PVTE_graph.py  
   応力・体積・温度・エネルギーのタイムステップ変化をグラフ化する。  
   __なお、体積を出力するには、次の"ICONST"というファイルを用意する。__
