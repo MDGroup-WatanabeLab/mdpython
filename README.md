@@ -143,19 +143,7 @@ wurtzite.py|ウルツ型構造|$\mathrm {ZnO, ZnS, BeO, BN, GaN}$
 
 - data_sorting.py  
  calc_mlff.pyが存在するディレクトリと同じ場所に入れる。  
-   - EXAMPLE
-      - npt_1
-      - npt_2
-      - ：
-      - ：
-      - npt_50
-      - ICONST
-      - INCAR
-      - KPOINTS
-      - POSCAR
-      - POTCAR
-      - ML_ABN  
-      - data_sorting.py
+   ![](2023-07-27-14-43-35.png)
  
   ターミナル上で，次のコマンドを実行する。  
 
