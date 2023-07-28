@@ -185,7 +185,7 @@ wurtzite.py|ウルツ型構造|$\mathrm {ZnO, ZnS, BeO, BN, GaN}$
 
 - EIGENVAL.py  
   VASPの出力ファイルEIGENVALからExcelを用いてバンド構造(バンド分散)を作成する  
-  EIGENVALと同じディレクトリ内で実行する
+  EIGENVALと同じディレクトリ内で実行する  
   以下のような図が生成される
 
   ![band_image](https://github.com/komug1ko/image/assets/139113059/e7b1b89c-ddf6-44c2-b870-c3a1ce1a071f)
