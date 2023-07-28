@@ -51,7 +51,7 @@ wurtzite.py|ウルツ型構造|$\mathrm {ZnO, ZnS, BeO, BN, GaN}$
 
 の4形式である。
 
-## MLFF用ツール（Tool4MLFF フォルダ）
+## MLFF用ツール（Tool4VASP フォルダ）
 - calc_mlff.py  
   VASPの計算を繰り返す。計算内容はINCARに依存する。CONTCARをPOSCARに変換して、構造を継続して使用する。  
   プログラム上部の __mpi_num__ を変更すれば，並列計算のコア数を変更可能。下のようなEXAMPLEフォルダを用意する。  
