@@ -185,19 +185,19 @@ wurtzite.py|ウルツ型構造|$\mathrm {ZnO, ZnS, BeO, BN, GaN}$
   DOSCARと同じディレクトリ内で実行する  
 
   - 実行時には以下のような図が作成される  
-  ![dos_image](https://github.com/komug1ko/image/assets/139113059/2212bcdb-56c4-430c-8d4f-5cdc39e681e9)
+  ![dos_image](https://github.com/MDGroup-WatanabeLab/image_for_mdpython/assets/139113059/a8f080ba-b236-4760-8be1-34c682b3298b)
 
 - EIGENVAL.py  
   VASPの出力ファイルEIGENVALからExcelを用いてバンド構造(バンド分散)をグラフ化する  
   EIGENVALと同じディレクトリ内で実行する  
   
   - 実行時には以下のような図が作成される  
-  ![band_image](https://github.com/komug1ko/image/assets/139113059/e7b1b89c-ddf6-44c2-b870-c3a1ce1a071f)
+  ![band_image](https://github.com/MDGroup-WatanabeLab/image_for_mdpython/assets/139113059/55796f50-9bdb-4de4-868d-0436cdba520f)
+
 
 - PCDAT.py  
   VASPの出力ファイルPCDATからペア相関関数(動径分布関数と同じ)をExcelを用いてグラフ化する  
   PCDATと同じディレクトリ内で実行する  
 
   - 実行時には以下のような図が作成される  
-  ![rdf_image](https://github.com/komug1ko/image/assets/139113059/2ae3b988-a010-44f1-9e98-8e919585f93f)
-
+  ![rdf_image](https://github.com/MDGroup-WatanabeLab/image_for_mdpython/assets/139113059/1e925344-e336-4aef-850a-c0e8a78e9b2d)
