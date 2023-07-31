@@ -1,20 +1,7 @@
 # mdpython マニュアル
-## 使い方
-① 使いたいプログラムを実行
 
-    $ python *****.py
-
-② 原子種に応じた番号入力（選択肢が無い場合は飛ばしてください）  
-③ サイズを入力する  
-&ensp; 例）2×2×5方向に拡張
-
-    2 2 5
-
-④ POSCARファイルが生成される  
-⑤ 場合に応じ，ファイル形式をPOSCARから変換する  
-
-    $ python convert_file.py  
-　　
+詳細な使い方は、各フォルダ内のREADMEと[チュートリアル](https://github.com/MDGroup-WatanabeLab/Tutorial)を参照してください。  
+このREADMEでは、各フォルダにどのようなプログラムが入っているかを記載しています。
 
 
 ## 作成可能な構造（Structure フォルダ）
