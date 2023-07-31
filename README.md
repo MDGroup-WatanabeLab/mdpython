@@ -1,4 +1,4 @@
-# mdpython マニュアル
+# mdpython 概要
 
 詳細な使い方は、各フォルダ内のREADMEと[チュートリアル](https://github.com/MDGroup-WatanabeLab/Tutorial)を参照してください。  
 このREADMEでは、各フォルダにどのようなプログラムが入っているかを記載しています。

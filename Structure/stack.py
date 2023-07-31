@@ -53,16 +53,16 @@ def choice_lattice(lattice1, lattice2, direction, stack_gap):
                ["0", "0", "0"]]
     if direction == "x":
         lattice[0][0] = str(float(lattice1[0][0]) + float(lattice2[0][0]) + stack_gap)
-        lattice[1][1] = str(min(float(lattice1[1][1]), float(lattice2[1][1])))
-        lattice[2][2] = str(min(float(lattice1[2][2]), float(lattice2[2][2])))
+        lattice[1][1] = str(max(float(lattice1[1][1]), float(lattice2[1][1])))
+        lattice[2][2] = str(max(float(lattice1[2][2]), float(lattice2[2][2])))
     elif direction == "y":
         lattice[1][1] = str(float(lattice1[1][1]) + float(lattice2[1][1]) + stack_gap)       
-        lattice[0][0] = str(min(float(lattice1[0][0]), float(lattice2[0][0])))
-        lattice[2][2] = str(min(float(lattice1[2][2]), float(lattice2[2][2])))
+        lattice[0][0] = str(max(float(lattice1[0][0]), float(lattice2[0][0])))
+        lattice[2][2] = str(max(float(lattice1[2][2]), float(lattice2[2][2])))
     elif direction == "z":
         lattice[2][2] = str(float(lattice1[2][2]) + float(lattice2[2][2]) + stack_gap)  
-        lattice[0][0] = str(min(float(lattice1[0][0]), float(lattice2[0][0])))
-        lattice[1][1] = str(min(float(lattice1[1][1]), float(lattice2[1][1])))
+        lattice[0][0] = str(max(float(lattice1[0][0]), float(lattice2[0][0])))
+        lattice[1][1] = str(max(float(lattice1[1][1]), float(lattice2[1][1])))
     return lattice
 
 # change coordinate (add lattice paramter to coordinate of second structure)
