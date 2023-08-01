@@ -13,6 +13,15 @@ f_format = ["mdl", "xyz", "lmp", "final", "POSCAR", "CONTCAR"]
 # convertibel format
 format_conv = ["mdl", "xyz", "lmp", "POSCAR"]
 
+# check interger or not
+def is_integer(n):
+    try:
+        int(n)
+    except Exception:
+        return False
+    else:
+        return True
+
 # input atom type (when you select final file as file before conversion)
 def id_atom(atom_type, atom_list):
     atom = []
@@ -302,7 +311,11 @@ def convert_lmp(f_name, format_after, comment, lattice, atom_type, atom_num, coo
     # ion (this part depend on type of lmp file)
     atom_valence = []
     for i in range(len(atom_type)):
-        atom_valence.append("ion{}".format(i + 1))
+        while True:
+            ion_n = input("Please input charge of {} : ".format(atom_type[i]))
+            if is_integer(ion_n):
+                atom_valence.append(ion_n)
+                break
 
     # If relative coordinates, convert to Cartesian coordinates
     if is_orthogonal(lattice):
@@ -321,8 +334,7 @@ def convert_lmp(f_name, format_after, comment, lattice, atom_type, atom_num, coo
         num = tmp
         for j in range(num, num + int(atom_num[i])):
             tmp += 1
-            # f.write("{} {} {} ".format(tmp, i + 1, atom_valence[i]))
-            f.write("{} {} ".format(tmp, i + 1))
+            f.write("{} {} {} ".format(tmp, i+1, atom_valence[i]))
             for k in range(3):
                 f.write(str(coordinate[j][k]) + " ")
             f.write("\n")
@@ -533,18 +545,24 @@ elif re.search("final", f_before):
     z = line[7].split()
     lattice = [[str(float(x[1]) - float(x[0])), "0", "0"], ["0", str(float(y[1]) - float(y[0])), "0"], ["0", "0", str(float(z[1]) - float(z[0]))]]
 
-    # get atom type and coordinate
+    # get atom type
     for i in range(9, len(line)):
-        _, atom, *coor = line[i].split()
+        _, atom, *_ = line[i].split()
         atom_type.append(atom)
-        coordinate.append(coor)
 
     # count the number of atom by type
     atom_num = count_atom(atom_type)
 
     # get type of atom
     atom_type = sorted(set(atom_type), key = atom_type.index)
-
+    
+    # get coordinate
+    for i in atom_type:
+        for j in range(9, len(line)):
+            _, atom, *coor = line[j].split()
+            if atom == i:
+                coordinate.append(coor)
+    
     # input chemical symbol
     atom_type = id_atom(atom_type, atom_list)
 
