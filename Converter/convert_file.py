@@ -15,12 +15,15 @@ format_conv = ["mdl", "xyz", "lmp", "POSCAR"]
 
 # check interger or not
 def is_integer(n):
-    try:
-        int(n)
-    except Exception:
-        return False
-    else:
+    if n == "none":
         return True
+    else:        
+        try:
+            int(n)
+        except Exception:
+            return False
+        else:
+            return True
 
 # input atom type (when you select final file as file before conversion)
 def id_atom(atom_type, atom_list):
@@ -312,7 +315,7 @@ def convert_lmp(f_name, format_after, comment, lattice, atom_type, atom_num, coo
     atom_valence = []
     for i in range(len(atom_type)):
         while True:
-            ion_n = input("Please input charge of {} : ".format(atom_type[i]))
+            ion_n = input("Please input charge of {} (If not necessary, input \"none\"): ".format(atom_type[i]))
             if is_integer(ion_n):
                 atom_valence.append(ion_n)
                 break
@@ -334,7 +337,10 @@ def convert_lmp(f_name, format_after, comment, lattice, atom_type, atom_num, coo
         num = tmp
         for j in range(num, num + int(atom_num[i])):
             tmp += 1
-            f.write("{} {} {} ".format(tmp, i+1, atom_valence[i]))
+            if atom_valence[i] == "none":
+                f.write("{} {} ".format(tmp, i+1))
+            else:
+                f.write("{} {} {} ".format(tmp, i+1, atom_valence[i]))
             for k in range(3):
                 f.write(str(coordinate[j][k]) + " ")
             f.write("\n")
