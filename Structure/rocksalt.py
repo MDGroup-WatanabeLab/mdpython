@@ -4,25 +4,23 @@ import math
 import numpy as np
 import random
 
-# select Atom
-atomflag = int(input("Select atoms from following: \n"
-                     "0 : GST \n"
-                     "1 : NaCl \n"
-                     "2 : MgO \n"
-                     "3 : CaO \n"
-                     "4 : GeTe with vacancy (1/10)\n"
-                     "5 : SbTe with vacancy for Sb:Te=2:3\n"
-                     "6 : GeSb with vacancy (1/10)\n"
-                     "7 : GeTe\n"
-                     "8 : SbTe\n"
-                     "9 : GeSb\n"
-                     "Input number : "))
+# Parameters
+atom_name = [
+            "GST", "NaCl", "MgO", "CaO", "GeTe with vacancy (1/10)", 
+            "SbTe with vacancy for Sb:Te=2:3", "GeSb with vacancy (1/10)"]
+atom_list = [["Ge", "Sb", "Te"], ["Na", "Cl"], ["Mg", "O"], ["Ca", "O"], ["Ge", "Te"],["Sb", "Te"], ["Ge", "Sb"]]
+lattice_list = [5.1249, 5.640, 4.2113, 4.8152, 6.01, 6.34, 5.83]
+
+print("Select atoms from following: ")
+for i in range(len(atom_list)):
+    print("{} : {}".format(i, atom_name[i]))
+atomflag = int(input("Input number : "))
 
 # input lattice size
 while True:
     print(
         "If you make GST, it is necessary to include one multiple of 5 at least\n"
-        "If you make SbTe, it is necessary to include one multiple of 3 at least\n"
+        "If you make SbTe, it is necessary to include one multiple of 3 at least"
         )
     size = input("Please input the lattice size [ x, y, z ] : ").split()
     
@@ -35,43 +33,6 @@ while True:
                 break
     if flag == 1:
         break
-
-
-# lattice parameter of unit cell
-if atomflag == 0:
-    l_a = 5.1249
-    l_b = 5.1249
-    l_c = 5.1249
-
-elif atomflag == 1: # NaCl
-    l_a = 5.640
-    l_b = 5.640
-    l_c = 5.640
-
-elif atomflag == 1: # MgO
-    l_a = 4.2113
-    l_b = 4.2113
-    l_c = 4.2113
-
-elif atomflag == 2: # CaO
-    l_a = 4.8152
-    l_b = 4.8152
-    l_c = 4.8152
-
-elif atomflag == 4 or atomflag == 7: # GeTe, mp-2612
-    l_a = 6.01
-    l_b = 6.01
-    l_c = 6.01
-
-elif atomflag == 5 or atomflag == 8: #SbTe, mp-7716
-    l_a = 6.34
-    l_b = 6.34
-    l_c = 6.34
-
-elif atomflag == 6 or atomflag == 9: #GeSb, mp-9935
-    l_a = 5.83
-    l_b = 5.83
-    l_c = 5.83
 
 
 # wycoff position of plus ion, 4a
@@ -94,9 +55,10 @@ for j in range(3):
         wyckoff_mns[i][j] = 1 + wyckoff_mns[i][j]
 
 # lattice parameter (matrix format)
-l_rocksalt = np.array([[l_a * float(size[0]), 0, 0], 
-                    [0, l_b * float(size[1]), 0], 
-                    [0, 0, l_c * float(size[2])]])
+l_rocksalt = np.array([[lattice_list[atomflag] * float(size[0]), 0, 0], 
+                    [0, lattice_list[atomflag] * float(size[1]), 0], 
+                    [0, 0, lattice_list[atomflag] * float(size[2])]])
+
 
 # coordinate list
 position_pls = []
@@ -227,7 +189,7 @@ file = "POSCAR"
 if os.path.exists(file):
     os.remove(file)
 f = open(file, "w")
-f.write("rocksalt_{}x{}x{}\n".format(size[0], size[1], size[2]))
+f.write("rocksalt_{}_{}x{}x{}\n".format(atom_name[atomflag], size[0], size[1], size[2]))
 f.write("1.0\n")
 for i in range(3):
     for j in range(3):
@@ -235,20 +197,9 @@ for i in range(3):
     f.write("\n")
 
 
-if atomflag == 1: # NaCl
-    f.write("Na Cl\n")
-elif atomflag == 2: # MgO
-    f.write("Mg O\n")
-elif atomflag == 3: # CaO
-    f.write("Ca O\n")
-elif atomflag == 4 or atomflag == 7: # GeTe with vacancy and no vacancy
-    f.write("Te Ge\n")
-elif atomflag == 5 or atomflag == 8: # SbTe with vacancy and no vacancy
-    f.write("Te Sb\n")
-elif atomflag == 6 or atomflag == 9: # GeSb with vacancy and no vacancy
-    f.write("Ge Sb\n")
-elif atomflag == 0: # GST
-    f.write("Te Ge Sb\n")
+for i in range(len(atom_list[atomflag])):
+    f.write("{} ".format(atom_list[atomflag][i]))
+f.write("\n")
 
 
 if atomflag == 0: # GST

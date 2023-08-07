@@ -38,7 +38,7 @@ wurtzite.py|ウルツ型構造|$\mathrm {ZnO, ZnS, BeO, BN, GaN}$
 ファイルの形式を変換できる
 - convert_file.py
 
-## MLFF用ツール（Tool4VASP フォルダ）  
+## VASP用ツール（Tool4VASP フォルダ）  
 VASPの出力ファイルの整理、繰り返し計算、データ処理用プログラム
 - DOSCAR.py
 - EIGENVAL

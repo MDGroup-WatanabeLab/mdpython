@@ -3,14 +3,17 @@ import os
 import math
 import numpy as np
 
-# select Atom
-atomflag = int(input("Select atoms from following: \n"
-                     "0 : ZnS \n"
-                     "1 : ZnO \n"
-                     "2 : BeO \n"
-                     "3 : BN \n"
-                     "4 : GaN \n"
-                     "Input number : "))
+# Parameters
+atom_name = ["ZnS", "ZnO", "BeO", "BN", "GaN"]
+atom_list = [["Zn", "S"], ["Zn", "O"], ["Be", "O"], ["B", "N"], ["Ga", "N"]]
+lattice_list = [
+                [3.8227, 3.8227, 6.2607], [3.24992, 3.24992, 5.20658],
+                [2.6979, 2.6979, 4.3772], [2.553, 2.553, 4.228], [3.189, 3.189, 5.185]]
+print("Select atoms from following: ")
+for i in range(len(atom_list)):
+    print("{} : {}".format(i, atom_name[i]))
+atomflag = int(input("Input number : "))
+
 
 # input lattice size
 while True:
@@ -26,33 +29,13 @@ while True:
     if flag == 1:
         break
 
-# lattice parameter 
-if atomflag == 0: # ZnS
-    l_a = 3.8227
-    l_b = 3.8227
-    l_c = 6.2607
-elif atomflag == 1: # ZnO
-    l_a = 3.24992
-    l_b = 3.24992
-    l_c = 5.20658
-elif atomflag == 2: # BeO
-    l_a = 2.6979
-    l_b = 2.6979
-    l_c = 4.3772
-elif atomflag == 3: # BN
-    l_a = 2.553
-    l_b = 2.553
-    l_c = 4.228
-elif atomflag == 4: # GaN
-    l_a = 3.189
-    l_b = 3.189
-    l_c = 5.185
-
 
 # lattice parameter (matrix format)
-l_hexagonal = np.array([[l_a * float(size[0]), 0, 0], 
-                    [-l_b*math.sin(math.pi/6) * float(size[1]), l_b * math.cos(math.pi/6) * float(size[1]), 0], 
-                    [0, 0, l_c * float(size[2])]])
+l_hexagonal = np.array([[lattice_list[atomflag][0] * float(size[0]), 0, 0], 
+                    [-lattice_list[atomflag][1]*math.sin(math.pi/6) * float(size[1]), lattice_list[atomflag][1] * math.cos(math.pi/6) * float(size[1]), 0], 
+                    [0, 0, lattice_list[atomflag][2] * float(size[2])]])
+
+
 
 # wycoff position of A
 x_A = 1/3
@@ -75,7 +58,7 @@ elif atomflag == 2: # BeO
     z_B = 0.3786 
 elif atomflag == 3: # BN
     z_B = 0.375 
-elif atomflag == 4: # GaN ()
+elif atomflag == 4: # GaN
     z_B = 0.38  #tentative
 
 wyckoff_B = [[1/3, 2/3, z_B], [2/3, 1/3, z_B+1/2]]
@@ -85,9 +68,9 @@ for i in range(len(wyckoff_B)):
             wyckoff_B[i][j] = 1 + wyckoff_B[i][j]
 
 # cubic lattice parameter (matrix format)　立方体っぽく切り取る（立方晶ではない）
-l_cubic = np.array([[l_a * float(size[0]), 0, 0], 
-                    [0, l_b * math.cos(math.pi/6) * float(size[1]), 0], 
-                    [0, 0, l_c * float(size[2])]])
+l_cubic = np.array([[lattice_list[atomflag][0] * float(size[0]), 0, 0], 
+                    [0, lattice_list[atomflag][1] * math.cos(math.pi/6) * float(size[1]), 0], 
+                    [0, 0, lattice_list[atomflag][2] * float(size[2])]])
 
 # coordinate 
 position_A = []
@@ -103,7 +86,7 @@ for i in range(int(size[0])*2):
                 temp[2, 0] = (wyckoff_A[l][2] + k)/float(size[2]) 
                 Ap = np.dot(l_hexagonal.T, temp) # 行列計算により絶対座標へ
                 
-                if Ap[0, 0] >= 0 and Ap[0, 0] <= l_cubic[0, 0] and Ap[0, 0] != l_a*float(size[0]): # 
+                if Ap[0, 0] >= 0 and Ap[0, 0] <= l_hexagonal[0, 0] and Ap[0, 0] != lattice_list[atomflag][0]*float(size[0]): # 
                     position_A.append("{} {} {}".format(Ap[0, 0], Ap[1, 0], Ap[2, 0]))
                     
 for i in range(int(size[0])*2):
@@ -116,7 +99,7 @@ for i in range(int(size[0])*2):
                 temp[2, 0] = (wyckoff_B[l][2] + k)/float(size[2])
                 Bp = np.dot(l_hexagonal.T, temp)
                 
-                if Bp[0, 0] >= 0 and Bp[0, 0] <= l_cubic[0, 0] and Bp[0, 0] != l_a*float(size[0]):
+                if Bp[0, 0] >= 0 and Bp[0, 0] <= l_hexagonal[0, 0] and Bp[0, 0] != lattice_list[atomflag][0]*float(size[0]):
                     position_B.append("{} {} {}".format(Bp[0, 0], Bp[1, 0], Bp[2, 0]))
 
 # write POSCAR
@@ -124,23 +107,16 @@ file = "POSCAR"
 if os.path.exists(file):
     os.remove(file)
 f = open(file, "w")
-f.write("wurtzite_{}x{}x{}\n".format(size[0], size[1], size[2]))
+f.write("wurtzite_{}_{}x{}x{}\n".format(atom_name[atomflag], size[0], size[1], size[2]))
 f.write("1.0\n")
 for i in range(3):
     for j in range(3):
-        f.write("{} ".format(l_cubic[i][j]))
+        f.write("{} ".format(l_hexagonal[i][j]))
     f.write("\n")
 
-if atomflag == 0: # ZnS
-    f.write("Zn S\n")
-elif atomflag == 1: # ZnO
-    f.write("Zn O\n")
-elif atomflag == 2: # BeO
-    f.write("Be O\n")
-elif atomflag == 3: # BN
-    f.write("B N\n")
-elif atomflag == 4: # GaN
-    f.write("Ga N\n")
+for i in range(len(atom_list[atomflag])):
+    f.write("{} ".format(atom_list[atomflag][i]))
+f.write("\n")
 
 f.write("{} {}\n".format(len(position_A), len(position_B)))
 f.write("Cartesian\n")

@@ -3,10 +3,13 @@ import os
 import math
 import numpy as np
 
-atomflag = int(input("Select atoms from following: \n"
-                     "0 : Sb \n"
-                     "1 : Te \n"
-                     "Input number : "))
+atom_list = ["Sb", "Te"]
+lattice_list = [[4.3083, 4.3083, 11.2743], [4.44693, 4.44693, 5.91492]]
+
+print("Select atoms from following: ")
+for i in range(len(atom_list)):
+    print("{} : {}".format(i, atom_list[i]))
+atomflag = int(input("Input number : "))
 
 # input lattice size
 while True:
@@ -22,21 +25,14 @@ while True:
     if flag == 1:
         break
 
-# lattice parameter of unit cell, mp-104
-if atomflag == 0: # Sb, wycoff
-    l_a = 4.3083
-    l_b = 4.3083
-    l_c = 11.2743
-elif atomflag == 1: # Te, wycoff
-    l_a = 4.44693
-    l_b = 4.44693
-    l_c = 5.91492
+
 
 
 # lattice parameter (matrix format)
-l_trigonal = np.array([[l_a * float(size[0]), 0, 0], 
-                    [-l_b*math.sin(math.pi/6) * float(size[1]), l_b * math.cos(math.pi/6) * float(size[1]), 0], 
-                    [0, 0, l_c * float(size[2])]])
+l_trigonal = np.array([[lattice_list[atomflag][0] * float(size[0]), 0, 0], 
+                    [-lattice_list[atomflag][1]*math.sin(math.pi/6) * float(size[1]), lattice_list[atomflag][1] * math.cos(math.pi/6) * float(size[1]), 0], 
+                    [0, 0, lattice_list[atomflag][2] * float(size[2])]])
+
 
 # wycoff position 
 if atomflag == 0: # Sb, wycoff
@@ -59,9 +55,9 @@ elif atomflag == 1: # Te, wycoff
             if wyckoff[i][j] < 0:
                 wyckoff[i][j] = 1 + wyckoff[i][j]
 
-l_cubic = np.array([[l_a * float(size[0]), 0, 0], 
-                    [0, l_b * math.cos(math.pi/6) * float(size[1]), 0], 
-                    [0, 0, l_c * float(size[2])]])
+l_cubic = np.array([[lattice_list[atomflag][0] * float(size[0]), 0, 0], 
+                    [0, lattice_list[atomflag][1] * math.cos(math.pi/6) * float(size[1]), 0], 
+                    [0, 0, lattice_list[atomflag][2] * float(size[2])]])
 
 # coordinate 
 position = []
@@ -76,7 +72,7 @@ for i in range(int(size[0])*2):   #斜めだから2倍にしておく
                 temp[2, 0] = (wyckoff[l][2] + k)/float(size[2]) 
                 Ap = np.dot(l_trigonal.T, temp) # 行列計算により絶対座標へ
                 
-                if Ap[0, 0] >= 0 and Ap[0, 0] <= l_cubic[0, 0] and Ap[0, 0] != l_a*float(size[0]): # 
+                if Ap[0, 0] >= 0 and Ap[0, 0] <= l_cubic[0, 0] and Ap[0, 0] != lattice_list[atomflag][0]*float(size[0]): # 
                     position.append("{} {} {}".format(Ap[0, 0], Ap[1, 0], Ap[2, 0]))
                     
 
@@ -86,16 +82,15 @@ file = "POSCAR"
 if os.path.exists(file):
     os.remove(file)
 f = open(file, "w")
-f.write("trigonal_{}x{}x{}\n".format(size[0], size[1], size[2]))
+f.write("trigonal_{}_{}x{}x{}\n".format(atom_list[atomflag], size[0], size[1], size[2]))
 f.write("1.0\n")
 for i in range(3):
     for j in range(3):
         f.write("{} ".format(l_cubic[i][j]))
     f.write("\n")
-if atomflag == 0: # Sb
-    f.write("Sb\n")
-elif atomflag == 1: # Te
-    f.write("Te\n")
+
+f.write("{}\n".format(atom_list[atomflag]))
+
 f.write("{}\n".format(len(position)))
 f.write("C\n")
 for i in position:
