@@ -3,11 +3,14 @@ import os
 import math
 import numpy as np
 
-# select Atom
-atomflag = int(input("Select atoms from following: \n"
-                     "0 : SiO2 \n"
-                     "1 : GeO2 \n"
-                     "Input number : "))
+# Parameters
+atom_name = ["SiO2", "GeO2"]
+atom_list = [["Si", "O"], ["Ge", "O"]]
+lattice_list = [[4.1773, 4.1773, 2.6655], [4.41, 4.41, 2.88]]
+print("Select atoms from following: ")
+for i in range(len(atom_list)):
+    print("{} : {}".format(i, atom_name[i]))
+atomflag = int(input("Input number : "))
 
 # input lattice size
 while True:
@@ -23,21 +26,11 @@ while True:
     if flag == 1:
         break
 
-# lattice parameter of unit cell
-if atomflag == 0: #SiO2
-    l_a = 4.1773
-    l_b = 4.1773
-    l_c = 2.6655
-
-elif atomflag == 1: #GeO2, mp-470
-    l_a = 4.41
-    l_b = 4.41
-    l_c = 2.88
 
 # lattice parameter (matrix format)
-l_tetragonal = np.array([[l_a * float(size[0]), 0, 0], 
-                         [0, l_b * float(size[1]), 0], 
-                         [0, 0, l_c * float(size[2])]])
+l_tetragonal = np.array([[lattice_list[atomflag] * float(size[0]), 0, 0], 
+                    [0, lattice_list[atomflag] * float(size[1]), 0], 
+                    [0, 0, lattice_list[atomflag] * float(size[2])]])
 
 if atomflag == 0:
     # wycoff position of A
@@ -60,7 +53,7 @@ if atomflag == 0:
             if wyckoff_o[i][j] < 0:
                 wyckoff_o[i][j] = 1 + wyckoff_o[i][j]
                 
-elif atomflag == 1:  #GeO2, mp-470
+else:  #GeO2, mp-470
     # wycoff position of A, 2a
     x_si = 1/2
     y_si = 1/2
@@ -115,18 +108,19 @@ file = "POSCAR"
 if os.path.exists(file):
     os.remove(file)
 f = open(file, "w")
-f.write("rutile_{}x{}x{}\n".format(size[0], size[1], size[2]))
+f.write("rutile_{}_{}x{}x{}\n".format(atom_name[atomflag], size[0], size[1], size[2]))
 f.write("1.0\n")
 for i in range(3):
     for j in range(3):
         f.write("{} ".format(l_tetragonal[i][j]))
     f.write("\n")
-if atomflag == 0: # SiO2
-    f.write("Si O\n")
-elif atomflag == 1: # GeO2
-    f.write("Ge O\n") 
+
+for i in range(len(atom_list[atomflag])):
+    f.write("{} ".format(atom_list[atomflag][i]))
+f.write("\n")
+
 f.write("{} {}\n".format(len(position_A), len(position_B)))
-f.write("C\n")
+f.write("Cartesian\n")
 for i in position_A:
     f.write(i + "\n")
 for i in position_B:

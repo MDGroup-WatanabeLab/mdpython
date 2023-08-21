@@ -3,14 +3,15 @@ import os
 import math
 import numpy as np
 
-# select atom
-# select Atom
-atomflag = int(input("Select atoms from following: \n"
-                     "0 : 3C-SiC \n"
-                     "1 : SiGe\n"
-                     "2 : SiSn\n"
-                     "3 : GeSn\n"
-                     "Input number : "))
+# Parameters
+atom_name = ["3C-SiC", "SiGe", "SiSn", "GeSn"]
+atom_list = [["C", "Si"], ["Si", "Ge"], ["Si", "Sn"], ["Ge", "Sn"]]
+lattice_list = [4.36, 5.60, 6.0774, 6.2260]
+
+print("Select atoms from following: ")
+for i in range(len(atom_list)):
+    print("{} : {}".format(i, atom_name[i]))
+atomflag = int(input("Input number : "))
 
 # input lattice size
 while True:
@@ -27,28 +28,11 @@ while True:
         break
 
 
-# lattice parameter of unit cell
-if atomflag == 0: #3C-SiC
-    l_a = 4.36
-    l_b = 4.36
-    l_c = 4.36
-elif atomflag == 1: # SiGe
-    l_a = 5.60
-    l_b = 5.60
-    l_c = 5.60
-elif atomflag == 2: # SiSn
-    l_a = 6.0774
-    l_b = 6.0774
-    l_c = 6.0774
-elif atomflag == 3: # GeSn
-    l_a = 6.2260
-    l_b = 6.2260
-    l_c = 6.2260
 
 # lattice parameter (matrix format)
-l_diamond = np.array([[l_a * float(size[0]), 0, 0], 
-                    [0, l_b * float(size[1]), 0], 
-                    [0, 0, l_c * float(size[2])]])
+l_diamond = np.array([[lattice_list[atomflag] * float(size[0]), 0, 0], 
+                    [0, lattice_list[atomflag] * float(size[1]), 0], 
+                    [0, 0, lattice_list[atomflag] * float(size[2])]])
 
 # wycoff position of A
 x_A = 0.0
@@ -102,29 +86,18 @@ for i in range(int(size[0])):
 file = "POSCAR"
 if os.path.exists(file):
     os.remove(file)
-f = open(file, "w")
-if atomflag == 0:
-    comp = "3C-SiC"
-elif atomflag == 1:
-    comp = "SiGe"
-elif atomflag == 2:
-    comp = "SiSn"
-elif atomflag == 3:
-    comp = "GeSn"
-f.write("Diamond_{}_{}x{}x{}\n".format(comp, size[0], size[1], size[2]))
+f = open(file, "w") 
+f.write("Diamond_{}_{}x{}x{}\n".format(atom_name[atomflag], size[0], size[1], size[2]))
 f.write("1.0\n")
 for i in range(3):
     for j in range(3):
         f.write("{} ".format(l_diamond[i][j]))
     f.write("\n")
-if atomflag == 0:
-    f.write("Si C\n")
-elif atomflag == 1:
-    f.write("Si Ge\n")
-elif atomflag == 2:
-    f.write("Si Sn\n")
-elif atomflag == 3:
-    f.write("Ge Sn\n")
+
+for i in range(len(atom_list[atomflag])):
+    f.write("{} ".format(atom_list[atomflag][i]))
+f.write("\n")
+
 f.write("{} {}\n".format(len(position_A), len(position_B)))
 f.write("Cartesian\n")
 for i in position_A:

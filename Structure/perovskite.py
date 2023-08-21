@@ -2,12 +2,14 @@
 import os
 import numpy as np
 
-
-# select Atom
-atomflag = int(input("Select atoms from following: \n"
-                     "0 : BaTiO3 \n"
-                     "1 : CaTiO3 \n"
-                     "Input number : "))
+# Parameters
+atom_name = ["BaTiO3", "CaTiO3"]
+atom_list = [["Ba", "Ti", "O"], ["Ca", "Ti", "O"]]
+lattice_list = [4.01, 3.89]
+print("Select atoms from following: ")
+for i in range(len(atom_list)):
+    print("{} : {}".format(i, atom_name[i]))
+atomflag = int(input("Input number : "))
 
 # input lattice size
 while True:
@@ -22,19 +24,6 @@ while True:
                 break
     if flag == 1:
         break
-
-
-# lattice parameter of unit cell
-if atomflag == 0: # BaTiO3
-    l_a = 5
-    l_b = 5
-    l_c = 5
-if atomflag == 1: # CaTiO3
-    l_a = 5
-    l_b = 5
-    l_c = 5
-
-
 
 
 # wycoff position of A
@@ -70,9 +59,9 @@ for i in range(len(wyckoff_O)):
 
 
 # lattice parameter (matrix format)
-l_orthorhombic = np.array([[l_a * float(size[0]), 0, 0], 
-                    [0, l_b * float(size[1]), 0], 
-                    [0, 0, l_c * float(size[2])]])
+l_orthorhombic = np.array([[lattice_list[atomflag] * float(size[0]), 0, 0], 
+                    [0, lattice_list[atomflag] * float(size[1]), 0], 
+                    [0, 0, lattice_list[atomflag] * float(size[2])]])
 
 # coordinate list
 position_A = []
@@ -127,29 +116,25 @@ file = "POSCAR"
 if os.path.exists(file):
     os.remove(file)
 f = open(file, "w")
-f.write("perovskite_{}x{}x{}\n".format(size[0], size[1], size[2]))
+f.write("perovskite_{}_{}x{}x{}\n".format(atom_name[atomflag], size[0], size[1], size[2]))
 f.write("1.0\n")
 for i in range(3):
     for j in range(3):
         f.write("{} ".format(l_orthorhombic[i][j]))
     f.write("\n")
 
-if atomflag == 0: # BaTiO3
-    f.write("Ba Ti O\n")
-elif atomflag == 1: # CaTiO3
-    f.write("Ca Ti O\n")
+for i in range(len(atom_list[atomflag])):
+    f.write("{} ".format(atom_list[atomflag][i]))
+f.write("\n")
 
 f.write("{} {} {}\n".format(len(position_A), len(position_B), len(position_O)))
 
 f.write("Cartesian\n")
 
-if atomflag == 0: # CaTiO3
-    for i in position_A:
-        f.write(i + "\n")
-    for i in position_B:
-        f.write(i + "\n")
-    for i in position_O:
-        f.write(i + "\n")
-
-
+for i in position_A:
+    f.write(i + "\n")
+for i in position_B:
+    f.write(i + "\n")
+for i in position_O:
+    f.write(i + "\n")
 f.close()

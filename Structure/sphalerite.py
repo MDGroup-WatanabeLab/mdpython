@@ -3,10 +3,15 @@ import os
 import math
 import numpy as np
 
-# select Atom
-atomflag = int(input("Select atoms from following: \n"
-                     "0 : ZnS \n"
-                     "Input number : "))
+# Parameters
+atom_name = ["ZnS"]
+atom_list = [["Zn", "S"]]
+lattice_list = [5.4093]
+print("Select atoms from following: ")
+for i in range(len(atom_list)):
+    print("{} : {}".format(i, atom_name[i]))
+atomflag = int(input("Input number : "))
+
 
 # input lattice size
 while True:
@@ -22,18 +27,14 @@ while True:
     if flag == 1:
         break
 
-# lattice parameter 
-if atomflag == 0: # ZnS
-    l_a = 5.4093
-    l_b = 5.4093
-    l_c = 5.4093
 
 
 
 # lattice parameter (matrix format)
-l_cubic = np.array([[l_a * float(size[0]), 0, 0], 
-                    [0, l_b * float(size[1]), 0], 
-                    [0, 0, l_c * float(size[2])]])
+l_cubic = np.array([[lattice_list[atomflag] * float(size[0]), 0, 0], 
+                    [0, lattice_list[atomflag] * float(size[1]), 0], 
+                    [0, 0, lattice_list[atomflag] * float(size[2])]])
+
 
 # wycoff position of A, 4a
 x_A = 0
@@ -91,15 +92,16 @@ file = "POSCAR"
 if os.path.exists(file):
     os.remove(file)
 f = open(file, "w")
-f.write("sphalerite_{}x{}x{}\n".format(size[0], size[1], size[2]))
+f.write("sphalerite_{}_{}x{}x{}\n".format(atom_name[atomflag], size[0], size[1], size[2]))
 f.write("1.0\n")
 for i in range(3):
     for j in range(3):
         f.write("{} ".format(l_cubic[i][j]))
     f.write("\n")
 
-if atomflag == 0: # ZnS
-    f.write("Zn S\n")
+for i in range(len(atom_list[atomflag])):
+    f.write("{} ".format(atom_list[atomflag][i]))
+f.write("\n")
 
 f.write("{} {}\n".format(len(position_A), len(position_B)))
 f.write("Cartesian\n")
