@@ -35,10 +35,9 @@ l_trigonal = np.array([[lattice_list[atomflag][0] * float(size[0]), 0, 0],
                     [0, 0, lattice_list[atomflag][2] * float(size[2])]])
 
 # wycoff position of A, 12c
-if atomflag == 0: #Al2O3
-    x_A = 1/3
-    y_A = 2/3
-    z_A = 0.3520
+x_A = 1/3
+y_A = 2/3
+z_A = 0.3520
 
 
 wyckoff_A = [
