@@ -5,7 +5,7 @@ import numpy as np
 
 # Parameters
 atom_list = ["C", "Si", "Ge", "Sn"]
-lattice_list = [3.56712, 5.431, 5.7871, 5.489]
+lattice_list = [3.56712, 5.431, 5.6754, 5.489]
 
 print("Select atoms from following: ")
 for i in range(len(atom_list)):
