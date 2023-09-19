@@ -13,12 +13,11 @@ lines.insert(7, "Selective dynamics")
 
 # separate lattice & position
 lattice_para = lines[0:9]
-position = lines[9:-1]
+position = lines[9:]
 
 for i in range(len(position)):
     position[i] = position[i].split()
 
-print(position)
 
 # get z position and z length
 position_z = []
@@ -40,8 +39,8 @@ for i in range(len(position)):
 # write POSCAR_selected
 with open("POSCAR_selected", "w") as f:
     for i in range(len(lattice_para)):
-        print(lattice_para[i], file = f)
+        f.write(lattice_para[i]+"\n")
     for i in range(len(position)):
         for j in range(3):
-            f.write("{:.6f} ".format(float(position[i][j])))
-        print(move[i], file=f)
+            f.write("{:.6f}\t".format(float(position[i][j])))
+        f.write(move[i]+"\n")
