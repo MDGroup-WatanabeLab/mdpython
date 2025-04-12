@@ -1,33 +1,9 @@
 # this program can be used for lectangier (α=β=γ=90°)
-# "l_range" decides range of not moving
-while True:
-    lrange = float(input("Select the range of unmoving from 0 ~ 1.0 : "))
-    if lrange >= 0 and lrange <= 1.0:
-        break
-    else:
-        print("Error! Input the float 0 ~ 1.0 !")
-        continue
-
-# Set axis
-while True: 
-    axis = input("Select axis vertical to interface (x, y, z) : ")
-    #axis = axis.split()
-    if axis == "x" or axis == "X":
-        axis_flag = 0
-        break
-    elif axis == "y" or axis == "Y":
-        axis_flag = 1
-        break
-    elif axis == "z" or axis == "Z":
-        axis_flag = 2
-        break
-    else:
-        print("Error! Select from x, y and z !")
-        continue
-
+# "range" decides range of not moving
+range_z = 0.25
 
 # read POSCAR
-with open("POSCAR", "r") as f:
+with open("CONTCAR", "r") as f:
     lines = f.readlines()
     for i in range(len(lines)):
         lines[i] = lines[i].replace("\n", "")
@@ -49,31 +25,31 @@ for i in range(len(position)):
 
 
 # get z position and z length
-lposition = []
+position_z = []
 for i in range(len(position)):
-    lposition.append(float(position[i][axis_flag]))
-lmax = max(lposition)
-lmin = min(lposition)
-length = lmax-lmin
-print(length)
+    position_z.append(float(position[i][2]))
+zmax = max(position_z)
+zmin = min(position_z)
+zlength = zmax-zmin
+
 # set capability (TTT or FFF)
 move = []
 if flag_cartesian:
     for i in range(len(position)):
-        if lposition[i] <= length*lrange+lmin:
+        if position_z[i] <= zlength*range_z+zmin:
             move.append("F F F") # don't move
-        if lposition[i] > length*lrange+lmin:
+        if position_z[i] > zlength*range_z+zmin:
             move.append("T T T") # can move
 
 else:
      for i in range(len(position)):
-        if lposition[i] <= lrange+lmin/length:
+        if position_z[i] <= range_z+zmin/zlength:
             move.append("F F F") # don't move
-        if lposition[i] > lrange+lmin/length:
+        if position_z[i] > range_z+zmin/zlength:
             move.append("T T T") # can move   
 
 # write POSCAR_selected
-with open("POSCAR_selected", "w") as f:
+with open("CONTCAR_selected", "w") as f:
     for i in range(len(lattice_para)):
         f.write(lattice_para[i]+"\n")
     for i in range(len(position)):

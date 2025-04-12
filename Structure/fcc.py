@@ -4,8 +4,8 @@ import math
 import numpy as np
 
 # Parameters
-atom_list = ["Au", "Ag", "Cu", "Fe", "Al", "Co", "Ru"]
-lattice_list = [4.7825, 4.0862, 3.614967, 3.5910, 4.04958, 3.548, 3.79]
+atom_list = ["Au", "Ag", "Cu", "Fe", "Al", "Co", "Ru", "Ni"]
+lattice_list = [4.7825, 4.0862, 3.614967, 3.5910, 4.04958, 3.548, 3.79, 3.7836]
 
 print("Select atoms from following: ")
 for i in range(len(atom_list)):

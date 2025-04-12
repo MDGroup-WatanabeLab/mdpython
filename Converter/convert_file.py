@@ -13,6 +13,18 @@ f_format = ["mdl", "xyz", "lmp", "final", "POSCAR", "CONTCAR"]
 # convertibel format
 format_conv = ["mdl", "xyz", "lmp", "POSCAR"]
 
+# check interger or not
+def is_integer(n):
+    if n == "none":
+        return True
+    else:        
+        try:
+            int(n)
+        except Exception:
+            return False
+        else:
+            return True
+
 # input atom type (when you select final file as file before conversion)
 def id_atom(atom_type, atom_list):
     atom = []
@@ -40,7 +52,7 @@ def coor_type(coordinate):
         for j in range(3):
             if -1.1 <= float(coordinate[i][j]) <= 1.1:
                 count += 1
-    if count == len(coordinate) * 3:
+    if count >= len(coordinate) * 2:
         return "Direct"
     else:
         return "Cartesian"
@@ -302,7 +314,11 @@ def convert_lmp(f_name, format_after, comment, lattice, atom_type, atom_num, coo
     # ion (this part depend on type of lmp file)
     atom_valence = []
     for i in range(len(atom_type)):
-        atom_valence.append("ion{}".format(i + 1))
+        while True:
+            ion_n = input("Please input charge of {} (If not necessary, input \"none\"): ".format(atom_type[i]))
+            if is_integer(ion_n):
+                atom_valence.append(ion_n)
+                break
 
     # If relative coordinates, convert to Cartesian coordinates
     if is_orthogonal(lattice):
@@ -321,8 +337,10 @@ def convert_lmp(f_name, format_after, comment, lattice, atom_type, atom_num, coo
         num = tmp
         for j in range(num, num + int(atom_num[i])):
             tmp += 1
-            # f.write("{} {} {} ".format(tmp, i + 1, atom_valence[i]))
-            f.write("{} {} ".format(tmp, i + 1))
+            if atom_valence[i] == "none":
+                f.write("{} {} ".format(tmp, i+1))
+            else:
+                f.write("{} {} {} ".format(tmp, i+1, atom_valence[i]))
             for k in range(3):
                 f.write(str(coordinate[j][k]) + " ")
             f.write("\n")
@@ -531,20 +549,33 @@ elif re.search("final", f_before):
     x = line[5].split()
     y = line[6].split()
     z = line[7].split()
-    lattice = [[str(float(x[1]) - float(x[0])), "0", "0"], ["0", str(float(y[1]) - float(y[0])), "0"], ["0", "0", str(float(z[1]) - float(z[0]))]]
+    xlo = float(x[0]) - min(0.0, float(x[2]), float(y[2]), float(x[2]) + float(y[2]))
+    xhi = float(x[1]) - max(0.0, float(x[2]), float(y[2]), float(x[2]) + float(y[2]))
+    ylo = float(y[0]) - min(0.0, float(z[2]))
+    yhi = float(y[1]) - max(0.0, float(z[2]))
+    lattice = [[str(float(xhi) - float(xlo)), "0", "0"], [x[2], str(float(y[1]) - float(y[0])), "0"], [y[2], z[2], str(float(z[1]) - float(z[0]))]]
 
-    # get atom type and coordinate
+    # get atom type
     for i in range(9, len(line)):
-        _, atom, *coor = line[i].split()
+        # _, atom, *_ = line[i].split()
+        atom, *_ = line[i].split()
         atom_type.append(atom)
-        coordinate.append(coor)
 
     # count the number of atom by type
     atom_num = count_atom(atom_type)
 
     # get type of atom
     atom_type = sorted(set(atom_type), key = atom_type.index)
-
+    
+    # get coordinate
+    for i in atom_type:
+        for j in range(9, len(line)):
+            # _, atom, *coor = line[j].split()
+            atom, coor_x, coor_y, coor_z, *_ = line[j].split()
+            coor = [coor_x, coor_y, coor_z]
+            if atom == i:
+                coordinate.append(coor)
+    
     # input chemical symbol
     atom_type = id_atom(atom_type, atom_list)
 
@@ -567,12 +598,15 @@ elif re.search("POSCAR", f_before) or re.search("CONTCAR", f_before):
 
     # get the number of atom by type
     atom_num = line[6].split()
-
+    
+    sd = 0
+    if re.search("Selective dynamics", line[7]):
+        sd = 1
     # get coordinate
     line_num = 0
     for i in atom_num:
         line_num = line_num + int(i)
-    for i in range(8, 8 + line_num):
+    for i in range(8+sd, 8 + sd + line_num):
         tmp_line = line[i].split()
         tmp_coor = [tmp_line[0], tmp_line[1], tmp_line[2]]
         coordinate.append(tmp_coor)
